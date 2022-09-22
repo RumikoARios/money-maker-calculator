@@ -29,7 +29,7 @@ public class Main {
             execute(opCodes[i], lVals[i], rVals[i]);
         }
 
-            for(double currentRes: results)
+        for(double currentRes: results)
             System.out.println(currentRes);
         
         } else if(args.length == 1 && args[0].equals("interactive"))
@@ -37,77 +37,74 @@ public class Main {
         else if (args.length == 3)//if 3 then we call handlecmdln method
             handleCommandLine(args);
         else
-            System.out.println("You didn't put anything, helllooo"); //anything else pass error msg
+        System.out.println("You didn't put anything, helllooo"); //anything else pass error msg
     }
 
         //get data frm cmd ln to pass into execute method to do work
         //each indivi.strg considered a seq. of char need to convert to approp. type 
 
-        static void executeInteractively() {
-            System.out.println("Enter an operation and two numbers");
-            Scanner scanner = new Scanner(System.in);
-            String userInput = scanner.nextLine();
-            String[] parts = userInput.split(regex " ");
-            performOperation(parts);
+    static void executeInteractively() {
+        System.out.println("Enter an operation and two numbers");
+        Scanner scanner = new Scanner(System.in);
+        String userInput = scanner.nextLine();
+        String[] parts = userInput.split(regex " ");
+        performOperation(parts);
+    }
 
+    private static void performOperation(String[] parts){
+        char opCode = opCodeFromString(parts[0]);
+        if(opCode == "w")
+            handleWhen(parts);
+        else {
+
+            double lVal = valueFromWord(parts[1]);
+            double rVal = valueFromWord(parts[2]);
+            double result = execute(opCode, lVal, rVal);
+            displayResult(opCode, lVal, rVal,result);
         }
+    } 
 
-        private static void performOperation(String[] parts){
-            char opCode = opCodeFromString(parts[0]);
-            if(opCode == "w")
-                    handleWhen(parts);
-            else {
+    private static void handleWhen(String[] parts) {
 
-                double lVal = valueFromWord(parts[1]);
-                double rVal = valueFromWord(parts[2]);
-                double result = execute(opCode, lVal, rVal);
-                displayResult(opCode, lVal, rVal,result);
+        LocalDate startDate = LocalDate.parse(parts[1]);
+        long daysToAdd = valueFromWord(parts[2]);
+        LocalDate newDate = startDate.plusDays(daysToAdd);
+
+        String output = String.format("%s plus %d days is %s", startDate, daysToAdd, newDate);
+        System.out.println(output);
+    }
+
+    private static void displayResult(char opCode, double lVal, double rVal, double result) {
+        char symbol = symbolFromOpCode(opCode);
+        StringBuilder builder = new StringBuilder(capacity: 20);
+        builder.append(lVal);
+        builder.append(" ");
+        builder.append(symbol);
+        builder.append(" ");
+
+        builder.append(rVal);
+        builder.append(" ");
+        builder.append("=");
+        builder.append(result);
+        String output = String.format("%f %c %f = %.3f", lVal, symbol, rVal, result);
+        System.out.println(output);
+         //need to call tostring
+    }
+
+    private static char symbolFromOpCode(char opCode){
+        char[] opCodes = {'a', 's', 'm', 'd'}; //ex.of parallel arr both correspond to each other
+        char[] symbols = {'+', '-', '*', '/'};
+        char symbol = ' ';
+        for(int i = 0; i < opCodes.length; i++) {
+            if(opCode == opCodes[i]){
+                symbol = symbols[i];
+                break;
             }
-        } 
-
-        private static void handleWhen(String[] parts) {
-
-            LocalDate startDate = LocalDate.parse(parts[1]);
-            long daysToAdd = valueFromWord(parts[2]);
-            LocalDate newDate = startDate.plusDays(daysToAdd);
-
-            String ouput = String.format("%s plus %d days is %s", startDate, daysToAdd, newDate);
-            System.out.println(output);
         }
-
-        private static void displayResult(char opCode, double lVal, double rVal, double result) {
-            char symbol = symbolFromOpCode(opCode);
-            StringBuilder builder = new StringBuilder(capacity: 20);
-            builder.append(lVal);
-            builder.append(" ");
-            builder.append(symbol);
-            builder.append(" ");
-
-            builder.append(rVal);
-            builder.append(" ");
-            builder.append("=");
-            builder.append(result);
-            String.output = String.format("%f %c %f = %.3f", lVal, symbol, rVal, result);
-            System.out.println(output);
-
-            //need to call tostring
-                
-        }
-
-        private static char symbolFromOpCode(char opCode){
-            char[] opCodes = {'a', 's', 'm', 'd'}; //ex.of parallel arr both correspond to each other
-            char[] symbols = {'+', '-', '*', '/'};
-            char symbol = ' ';
-            for(int i = 0; i < opCodes.length; i++) {
-                if(opCode == opCodes[i]){
-                    symbol = symbols[i];
-                    break;
-                }
-            }
-            return symbol;
-        }
+        return symbol;
+    }
     
-        private static void handleCommandLine(String[] args){
+    private static void handleCommandLine(String[] args) {
         char opCode = args[0].charAt(0);//converts strg val in cmdln into correct datatypes
         double lVal = Double.parseDouble(args[1]);
         double rVal = Double.parseDouble(args[2]);
