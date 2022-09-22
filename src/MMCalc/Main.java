@@ -34,7 +34,7 @@ public class Main {
         
         } else if(args.length == 1 && args[0].equals("interactive"))
             executeInteractively();
-        else if (args.length == 3)//if 3 then we call handlecmdln method
+        else if (args.length == 3) //if 3 then we call handlecmdln method
             handleCommandLine(args);
         else
         System.out.println("You didn't put anything, helllooo"); //anything else pass error msg
@@ -47,18 +47,18 @@ public class Main {
         System.out.println("Enter an operation and two numbers");
         Scanner scanner = new Scanner(System.in);
         String userInput = scanner.nextLine();
-        String[] parts = userInput.split(regex " ");
+        String[] parts = userInput.split(" "); //for user input
         performOperation(parts);
     }
 
     private static void performOperation(String[] parts){
         char opCode = opCodeFromString(parts[0]);
-        if(opCode == "w")
+        if(opCode == 'w')
             handleWhen(parts);
         else {
 
-            double lVal = valueFromWord(parts[1]);
-            double rVal = valueFromWord(parts[2]);
+            double lVal = valFromWord(parts[1]);
+            double rVal = valFromWord(parts[2]);
             double result = execute(opCode, lVal, rVal);
             displayResult(opCode, lVal, rVal,result);
         }
@@ -67,8 +67,8 @@ public class Main {
     private static void handleWhen(String[] parts) {
 
         LocalDate startDate = LocalDate.parse(parts[1]);
-        long daysToAdd = valueFromWord(parts[2]);
-        LocalDate newDate = startDate.plusDays(daysToAdd);
+        long daysToAdd = (long)valFromWord(parts[2]); //needed to parse double to long (change one primitive to another)
+        LocalDate newDate = startDate.plusDays(daysToAdd); 
 
         String output = String.format("%s plus %d days is %s", startDate, daysToAdd, newDate);
         System.out.println(output);
@@ -76,7 +76,7 @@ public class Main {
 
     private static void displayResult(char opCode, double lVal, double rVal, double result) {
         char symbol = symbolFromOpCode(opCode);
-        StringBuilder builder = new StringBuilder(capacity: 20);
+        StringBuilder builder = new StringBuilder( 20);
         builder.append(lVal);
         builder.append(" ");
         builder.append(symbol);
@@ -134,7 +134,6 @@ public class Main {
                 break;    
         }
         return result;  
-
 
     }
 
